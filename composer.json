@@ -1,7 +1,7 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "neomerx/limoncello-collins",
+	"description": "Quick start JSON API application",
+	"keywords": ["framework", "laravel", "neomerx", "limoncello", "json-api"],
 	"license": "MIT",
 	"type": "project",
 	"require": {
