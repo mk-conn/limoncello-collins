@@ -19,3 +19,8 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+require 'Routes/authors.php';
+require 'Routes/comments.php';
+require 'Routes/posts.php';
+require 'Routes/sites.php';
