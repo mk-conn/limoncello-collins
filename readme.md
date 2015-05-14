@@ -12,7 +12,6 @@ It has less than minimal changes to the upstream so it could be used as an ordin
 [![Code Coverage](https://scrutinizer-ci.com/g/neomerx/json-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/neomerx/json-api/?branch=master)
 [![Build Status](https://travis-ci.org/neomerx/json-api.svg?branch=master)](https://travis-ci.org/neomerx/json-api)
 [![HHVM](https://img.shields.io/hhvm/neomerx/json-api.svg)](https://travis-ci.org/neomerx/json-api)
-[![License](https://img.shields.io/packagist/l/neomerx/json-api.svg)](https://packagist.org/packages/neomerx/json-api)
 
 You can find more information [here](https://github.com/neomerx/json-api).
 
@@ -72,7 +71,7 @@ and body formatted
 #### Download latest version
 
 ```
-$ composer create-project neomerx/limoncello-collins
+$ composer create-project neomerx/limoncello-collins=dev-master --prefer-dist --prefer-dist && cd limoncello-collins/
 ```
 
 #### Migrate and seed database
@@ -85,10 +84,10 @@ In case of sqlite usage you need to create empty database file
 $ touch storage/database.sqlite
 ```
 
-Migrate and seed data (choose ```y``` when asked ```Do you really wish to run this command? [y/N]```)
+Migrate and seed data
 
 ```
-$ php artisan migrate --seed
+$ php artisan migrate && php migrate db:seed
 ```
 
 #### Run HTTP server
