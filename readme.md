@@ -1,27 +1,138 @@
-## Laravel PHP Framework
+## Quick start JSON API application
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+[![License](https://poser.pugx.org/neomerx/limoncello-collins/license.svg)](https://packagist.org/packages/neomerx/limoncello-collins)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+Limoncello-collins is a pre-configured [JSON API](http://jsonapi.org/) quick start application based on upstream [Laravel](https://github.com/laravel/laravel) and framework agnostic JSON API implementation [neomerx/json-api](https://github.com/neomerx/json-api).
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+It has less than minimal changes to the upstream so it could be used as an ordinary Laravel template application. 
 
-## Official Documentation
+### Neomerx/json-api
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/neomerx/json-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/neomerx/json-api/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/neomerx/json-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/neomerx/json-api/?branch=master)
+[![Build Status](https://travis-ci.org/neomerx/json-api.svg?branch=master)](https://travis-ci.org/neomerx/json-api)
+[![HHVM](https://img.shields.io/hhvm/neomerx/json-api.svg)](https://travis-ci.org/neomerx/json-api)
+[![License](https://img.shields.io/packagist/l/neomerx/json-api.svg)](https://packagist.org/packages/neomerx/json-api)
 
-## Contributing
+You can find more information [here](https://github.com/neomerx/json-api).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+### Usage
 
-## Security Vulnerabilities
+Limoncello-collins ships with
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+- A few sample models with database migrations and seeds
+- JSON API for the models CRUD operations
+- Exceptions handling with JSON API Errors support
+
+Adding fully JSON API compatible services is extremely easy. You can use your models with zero modifications. For example all required controller code to handle ```GET resource``` requests might be as simple as this
+
+```php
+class AuthorsController extends Controller
+{
+	public function show($id)
+	{
+        return $this->getResponse(Author::findOrFail($id));
+    }
+}
+```
+
+The response will have JSON API required headers
+```
+HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+Host: localhost:8888
+```
+
+and body formatted
+
+```json
+{
+    "data": {
+        "attributes": {
+            "first_name": "Dan", 
+            "last_name": "Gebhardt"
+        }, 
+        "id": "1", 
+        "links": {
+            "posts": {
+                "linkage": {
+                    "id": "1", 
+                    "type": "posts"
+                }
+            }, 
+            "self": "http://localhost:8888/authors/1"
+        }, 
+        "type": "authors"
+    }
+}
+```
+
+### Installation
+
+#### Download latest version
+
+```
+$ composer create-project neomerx/limoncello-collins
+```
+
+#### Migrate and seed database
+
+For simplicity it uses sqlite database by default. You are free to change database settings before the next step.
+
+In case of sqlite usage you need to create empty database file
+
+```
+$ touch storage/database.sqlite
+```
+
+Migrate and seed data (choose ```y``` when asked ```Do you really wish to run this command? [y/N]```)
+
+```
+$ php artisan migrate --seed
+```
+
+#### Run HTTP server
+
+An easy way to start development server is
+
+```
+$ php artisan serve --port=8888
+```
+
+And that's it! The server can serve JSON API. For example a request with ```curl```
+
+```
+$ curl -X GET -H "Content-Type: application/vnd.api+json" -H "Accept: application/vnd.api+json" http://localhost:8888/authors/1
+```
+
+should return
+
+```json
+{
+    "data": {
+        "type": "authors",
+        "id": "1",
+        "attributes": {
+            "first_name": "Dan",
+            "last_name": "Gebhardt"
+        },
+        "links": {
+            "self": "http:\/\/localhost:8888\/authors\/1",
+            "posts": {
+                "linkage": {
+                    "type": "posts",
+                    "id": "1"
+                }
+            }
+        }
+    }
+}
+```
 
 ### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+This project is a fork from upstream [laravel/laravel](https://github.com/laravel/laravel). All changes to the upstream are licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+## Versioning
+
+This project is synchronized with upstream ```master``` branch and uses the same version numbers.
