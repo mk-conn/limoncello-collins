@@ -92,7 +92,7 @@ $ cd limoncello-collins/
 
 For simplicity it uses sqlite database by default. You are free to change database settings before the next step.
 
-In case of sqlite usage you need to create empty database file
+In case of sqlite usage you need to create an empty database file
 
 ```
 $ touch storage/database.sqlite
@@ -163,7 +163,7 @@ The specification requires responses to have certain headers and data to be form
 
 Model schema tells encoder how to convert object/model to JSON API format. It defines what fields (attributes and links) should be converted and how. How links and urls should be shown and what object should be placed to ```included``` section. Fore more information see [neomerx/json-api](https://github.com/neomerx/json-api).
 
-Schemas are placed in ```app/Schemas``` folder. When a new schema added a mapping between model and its schema should be added to ```config/limoncello.php``` configuration file. An example of Schema might look like
+Schemas are placed in ```app/Schemas``` folder. When a new schema is added a mapping between model and its schema should be added to ```config/limoncello.php``` configuration file. An example of Schema might look like
 
 ```php
 
