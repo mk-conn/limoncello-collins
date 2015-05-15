@@ -70,6 +70,15 @@ and body formatted
     }
 }
 ```
+
+Limoncello collins ships with sample CRUD API for models ```Author```, ```Comment```, ```Post```, ```Site```. Main code locations are
+
+* ```app/Models```
+* ```app/Schemas```
+* ```app/Http/Controllers/Demo```
+* ```app/Http/Routes```
+* ```config/limoncello.php```
+
 ### Installation
 
 #### Download latest version
