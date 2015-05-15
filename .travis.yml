@@ -8,6 +8,6 @@ before_script:
 - travis_retry composer install --no-interaction --prefer-dist
 - touch storage/database.sqlite
 - php artisan migrate --force
-- php migrate db:seed
+- php artisan db:seed --force
 script:
 - phpunit --coverage-text --coverage-clover=coverage.clover
