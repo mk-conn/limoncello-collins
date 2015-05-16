@@ -101,7 +101,7 @@ $ touch storage/database.sqlite
 Migrate and seed data
 
 ```
-$ php artisan migrate && php migrate db:seed
+$ php artisan migrate --force && php artisan db:seed --force
 ```
 
 #### Run HTTP server
