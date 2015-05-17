@@ -43,10 +43,10 @@ class PostsController extends Controller
             throw new BadRequestHttpException();
         }
 
-        $comment = new Post($attributes);
-        $comment->save();
+        $post = new Post($attributes);
+        $post->save();
 
-        return $this->getCreatedResponse($comment);
+        return $this->getCreatedResponse($post);
 	}
 
 	/**
@@ -86,9 +86,9 @@ class PostsController extends Controller
             throw new BadRequestHttpException();
         }
 
-        $comment = Post::findOrFail($id);
-        $comment->fill($attributes);
-        $comment->save();
+        $post = Post::findOrFail($id);
+        $post->fill($attributes);
+        $post->save();
 
         return $this->getCodeResponse(Response::HTTP_NO_CONTENT);
     }
