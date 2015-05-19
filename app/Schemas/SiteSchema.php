@@ -42,7 +42,19 @@ class SiteSchema extends SchemaProvider
     {
         /** @var Site $site */
         return [
-            'posts' => [self::DATA => $site->posts->all(), self::INCLUDED => true],
+            'posts' => [self::DATA => $site->posts->all()],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIncludePaths()
+    {
+        return [
+            'posts',
+            'posts.author',
+            'posts.comments',
         ];
     }
 }

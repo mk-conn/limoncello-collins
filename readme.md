@@ -187,7 +187,16 @@ class SiteSchema extends SchemaProvider
     public function getLinks($site)
     {
         return [
-            'posts' => [self::DATA => $site->posts->all(), self::INCLUDED => true],
+            'posts' => [self::DATA => $site->posts->all()],
+        ];
+    }
+
+    public function getIncludePaths()
+    {
+        return [
+            'posts',
+            'posts.author',
+            'posts.comments',
         ];
     }
 }

@@ -6,12 +6,10 @@ use \Illuminate\Http\Request;
 use \Illuminate\Http\Response;
 use \Neomerx\JsonApi\Document\Error;
 use \App\Services\LaravelIntegration;
-use \Neomerx\JsonApi\Encoder\Encoder;
-use \Neomerx\JsonApi\Responses\Responses;
-use \Neomerx\JsonApi\Parameters\MediaType;
+use \Neomerx\Limoncello\Config\Config as C;
+use \Neomerx\JsonApi\Encoder\JsonEncodeOptions;
 use \Neomerx\Limoncello\Errors\RenderContainer;
 use \Neomerx\Limoncello\Contracts\IntegrationInterface;
-use \Neomerx\JsonApi\Contracts\Codec\CodecContainerInterface;
 use \Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use \Neomerx\JsonApi\Contracts\Exceptions\RenderContainerInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\SupportedExtensionsInterface;
@@ -54,17 +52,14 @@ class Handler extends ExceptionHandler
 
         $this->integration = new LaravelIntegration();
 
-        // Init render container with default 'HTTP code only' render
-        $this->renderContainer = new RenderContainer(function ($statusCode) {
-            $responses = new Responses($this->integration);
-
-            $content   = null;
-            $mediaType = new MediaType(CodecContainerInterface::JSON_API_TYPE);
+        $extensionsClosure = function () {
+            /** @var SupportedExtensionsInterface $supportedExtensions */
             $supportedExtensions = app()->resolved(SupportedExtensionsInterface::class) === false ? null :
                 app()->make(SupportedExtensionsInterface::class);
+            return $supportedExtensions;
+        };
 
-            return $responses->getResponse($statusCode, $mediaType, $content, $supportedExtensions);
-        });
+        $this->renderContainer = new RenderContainer($this->integration, $extensionsClosure);
 
         $this->registerCustomExceptions();
     }
@@ -109,31 +104,30 @@ class Handler extends ExceptionHandler
      */
     private function registerCustomExceptions()
     {
-        $this->renderContainer->registerMapping([
+        $this->renderContainer->registerHttpCodeMapping([
 
             MassAssignmentException::class => Response::HTTP_FORBIDDEN,
 
         ]);
 
         //
-        // That's an example of how to create JSON API Error response from exception.
+        // That's an example of how to create custom response with JSON API Error.
         //
         $custom404render = function (/*Request $request, ModelNotFoundException $exception*/) {
-            $responses = new Responses($this->integration);
 
-            $supportedExtensions = app()->resolved(SupportedExtensionsInterface::class) === false ? null :
-                app()->make(SupportedExtensionsInterface::class);
+            // This render can convert JSON API Error to Response
+            $jsonApiErrorRender = $this->renderContainer->getErrorsRender(Response::HTTP_NOT_FOUND);
 
-            $title   = 'Requested item not found';
-            $error   = new Error(null, null, null, null, $title);
-            $content = Encoder::instance([])->error($error);
+            // Prepare Error object (e.g. take info from the exception)
+            $title = 'Requested item not found';
+            $error = new Error(null, null, null, null, $title);
 
-            return $responses->getResponse(
-                Response::HTTP_NOT_FOUND,
-                new MediaType(CodecContainerInterface::JSON_API_TYPE),
-                $content,
-                $supportedExtensions
-            );
+            // Load JSON formatting options from config
+            $opts = array_get($this->integration->getConfig(), C::JSON.'.'. C::JSON_OPTIONS, C::JSON_OPTIONS_DEFAULT);
+            $encodeOptions = new JsonEncodeOptions($opts);
+
+            // Convert error (note it accepts array of errors) to HTTP response
+            return $jsonApiErrorRender([$error], $encodeOptions);
         };
         $this->renderContainer->registerRender(ModelNotFoundException::class, $custom404render);
     }

@@ -18,7 +18,7 @@ class AuthorSchema extends SchemaProvider
     /**
      * @inheritdoc
      */
-    protected function getBaseSelfUrl()
+    protected function getBaseSelfUrl($resource)
     {
         // NOTE: You can dynamically set resource urls
 

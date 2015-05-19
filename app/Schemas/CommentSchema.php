@@ -42,7 +42,17 @@ class CommentSchema extends SchemaProvider
     {
         /** @var Comment $comment */
         return [
-            'post' => [self::DATA => $comment->post, self::INCLUDED => true],
+            'post' => [self::DATA => $comment->post],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIncludePaths()
+    {
+        return [
+            'post',
         ];
     }
 }
