@@ -9,6 +9,7 @@ use \App\Services\LaravelIntegration;
 use \Neomerx\Limoncello\Config\Config as C;
 use \Neomerx\JsonApi\Encoder\JsonEncodeOptions;
 use \Neomerx\Limoncello\Errors\RenderContainer;
+use \Neomerx\JsonApi\Parameters\ParametersFactory;
 use \Neomerx\Limoncello\Contracts\IntegrationInterface;
 use \Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use \Neomerx\JsonApi\Contracts\Exceptions\RenderContainerInterface;
@@ -59,7 +60,7 @@ class Handler extends ExceptionHandler
             return $supportedExtensions;
         };
 
-        $this->renderContainer = new RenderContainer($this->integration, $extensionsClosure);
+        $this->renderContainer = new RenderContainer(new ParametersFactory(), $this->integration, $extensionsClosure);
 
         $this->registerCustomExceptions();
     }
