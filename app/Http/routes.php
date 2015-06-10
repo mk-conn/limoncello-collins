@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+require 'Routes/authors.php';
+require 'Routes/comments.php';
+require 'Routes/posts.php';
+require 'Routes/sites.php';
