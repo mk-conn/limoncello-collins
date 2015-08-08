@@ -1,11 +1,15 @@
-<?php
+<?php namespace App\Http;
 
-namespace App\Http;
-
-use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use \Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    /** Middleware key */
+    const JSON_API_BASIC_AUTH = 'jsonapi.basicAuth';
+
+    /** Middleware key */
+    const JSON_API_JWT_AUTH = 'jsonapi.jwtAuth';
+
     /**
      * The application's global HTTP middleware stack.
      *
@@ -13,6 +17,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Neomerx\CorsIlluminate\CorsMiddleware::class,
         \App\Http\Middleware\EncryptCookies::class,
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
@@ -26,8 +31,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth'       => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest'      => \App\Http\Middleware\RedirectIfAuthenticated::class,
+
+        self::JSON_API_BASIC_AUTH => \App\Http\Middleware\JsonApiBasicAuth::class,
+        self::JSON_API_JWT_AUTH   => \App\Http\Middleware\JsonApiJwtAuth::class,
     ];
 }

@@ -2,12 +2,25 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use \Hash;
+use \Carbon\Carbon;
+use \Illuminate\Auth\Authenticatable;
+use \Illuminate\Database\Eloquent\Model;
+use \Illuminate\Auth\Passwords\CanResetPassword;
+use \Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use \Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+/**
+ * @property int    id
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ *
+ * @method static User      findOrFail(int $id)
+ * @method static null|User find(int $id)
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
     use Authenticatable, CanResetPassword;
@@ -32,4 +45,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+
+    /**
+     * Set password. The password would be hashed.
+     *
+     * @param string $value
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make((string)$value);
+    }
 }
