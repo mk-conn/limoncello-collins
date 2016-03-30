@@ -11,6 +11,10 @@
 |
 */
 
+/** @var Illuminate\Database\Eloquent\Factory $factory */
+
+(new \Neomerx\LimoncelloIlluminate\Database\Factories\Runner($factory))->run();
+
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,

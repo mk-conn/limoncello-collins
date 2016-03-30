@@ -15,6 +15,20 @@ $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
 
+$app->configureMonologUsing(function (\Monolog\Logger $monolog) use ($app) {
+    if (env('APP_USE_LOG_SERVER', false) === true) {
+        $logServer = env('APP_LOG_SERVER', 'logs');
+        $publisher = new \Gelf\Publisher(new \Gelf\Transport\UdpTransport($logServer));
+        $handler   = new \Monolog\Handler\GelfHandler($publisher);
+        $handler->pushProcessor(new \Monolog\Processor\WebProcessor());
+        $handler->pushProcessor(new \Monolog\Processor\UidProcessor());
+        $monolog->pushHandler($handler);
+    } else {
+        $monolog->pushHandler($handler = new \Monolog\Handler\StreamHandler($app->storagePath() . '/logs/laravel.log'));
+        $handler->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true, true));
+    }
+});
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces

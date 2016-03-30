@@ -149,6 +149,12 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * 3rd party Service Providers...
+         */
+        Neomerx\CorsIlluminate\Providers\LaravelServiceProvider::class,
+        Neomerx\Limoncello\Providers\LaravelServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
